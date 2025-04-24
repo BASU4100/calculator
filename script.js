@@ -66,10 +66,11 @@ operandSide.addEventListener("click", (e) => {
     }
     else if (id == "del") {
         if (isFinite(value))
-            value = ((value<10)?0:value.slice(0,-1));
-
+            value = (((value+"").length == 1)?0:value.slice(0,-1));
+        isDot = (((value+"").includes("."))?true:false);
     }
     else if (id == "dot") {
+        value = ((isValueTaken)?value:0);
         value += ((!isDot)?".":"");
         isDot = true;
         isValueTaken = true;
@@ -88,7 +89,7 @@ operandSide.addEventListener("click", (e) => {
     else{
         if (id == "")
             return;
-        value = ((value==="0" || !isValueTaken)?"":value);
+        value = (((value+"")==="0" || !isValueTaken)?"":value);
         if (value.length==6) {
             alert("Only 6 digits can be taken.");
             return;
