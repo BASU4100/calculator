@@ -8,7 +8,6 @@ let isOperatorSelected = false;
 let isValueTaken = false;
 let isEvaluated = false;
 let firstOperand = "";
-let secondOperand = "";
 let operator = "";
 
 operatorSide.addEventListener("click", (e) => {
@@ -65,6 +64,11 @@ operandSide.addEventListener("click", (e) => {
         }
         value = 0;
     }
+    else if (id == "del") {
+        if (isFinite(value))
+            value = ((value<10)?0:value.slice(0,-1));
+
+    }
     else if (id == "dot") {
         value += ((!isDot)?".":"");
         isDot = true;
@@ -91,9 +95,6 @@ operandSide.addEventListener("click", (e) => {
         }
         value += id[1];
         isValueTaken = true;
-        if (isOperatorSelected) {
-            secondOperand = value;
-        }
     }
     display();
 });
@@ -104,13 +105,13 @@ function evaluate() {
     else {
         firstOperand = (((firstOperand+"").includes("e"))?expConversion(firstOperand, true):firstOperand);
         switch (operator) {
-            case "*" : value = firstOperand * secondOperand;
+            case "*" : value = firstOperand * value;
                         break;
-            case "/" : value = ((secondOperand == 0)?"IDK": firstOperand / secondOperand);
+            case "/" : value = ((value == 0)?"IDK": firstOperand / value);
                         break;
-            case "-" : value = firstOperand - secondOperand;
+            case "-" : value = firstOperand - value;
                         break;
-            default : value = +firstOperand + +secondOperand;
+            default : value = +firstOperand + +value;
         }
         value = Math.round(value * 10000) / 10000;
         return (((value+"").length > 6)?expConversion(value, false):value);
