@@ -12,6 +12,12 @@ let secondOperand = "";
 let operator = "";
 
 operatorSide.addEventListener("click", (e) => {
+    if (value === "IDK") {
+        document.querySelector("#AC").click();
+        return;
+    }
+    if (e.target.id == "")
+        return;
     if (isOperatorSelected && isValueTaken) {
         value = evaluate();
         isEvaluated = true;
@@ -46,6 +52,8 @@ function addRemoveStyle(elem, change) {
 
 operandSide.addEventListener("click", (e) => {
     let id = e.target.id;
+    if (value === "IDK")
+        id = "AC";
     if (id == "AC") {
         isOperatorSelected = false;
         isValueTaken = false;
@@ -73,7 +81,9 @@ operandSide.addEventListener("click", (e) => {
                 addRemoveStyle(ops[key], false);
         }
     }
-    else {
+    else{
+        if (id == "")
+            return;
         value = ((value==="0" || !isValueTaken)?"":value);
         if (value.length==6) {
             alert("Only 6 digits can be taken.");
@@ -81,8 +91,9 @@ operandSide.addEventListener("click", (e) => {
         }
         value += id[1];
         isValueTaken = true;
-        if (isOperatorSelected)
+        if (isOperatorSelected) {
             secondOperand = value;
+        }
     }
     display();
 });
@@ -91,17 +102,34 @@ function evaluate() {
     if (!isOperatorSelected || (isOperatorSelected && !isValueTaken))
         return value;
     else {
+        firstOperand = (((firstOperand+"").includes("e"))?expConversion(firstOperand, true):firstOperand);
         switch (operator) {
-            case "*" : return firstOperand * secondOperand;
-            case "/" : return ((secondOperand == 0)?"IDK": firstOperand / secondOperand);
-            case "-" : return firstOperand - secondOperand;
-            default : return +firstOperand + +secondOperand;
+            case "*" : value = firstOperand * secondOperand;
+                        break;
+            case "/" : value = ((secondOperand == 0)?"IDK": firstOperand / secondOperand);
+                        break;
+            case "-" : value = firstOperand - secondOperand;
+                        break;
+            default : value = +firstOperand + +secondOperand;
         }
+        value = Math.round(value * 10000) / 10000;
+        return (((value+"").length > 6)?expConversion(value, false):value);
+    }
+}
+
+function expConversion(val, reverse) {
+    if (reverse) {
+        let arr = val.split("e");
+        return arr[0] * (10**arr[1]);
+    }
+    else {
+        let arr = (val+"").split(".");
+        return (+arr[0] / (10**(arr[0].length-1))).toFixed(1)+"e"+(arr[0].length-1);
     }
 }
 
 function display() { 
-    if (isEvaluated && value !== "IDK") {
+    if (isEvaluated && value !== "IDK" && !(value+"").includes("e")) {
         let arr = (value+"").split(".");
         values.textContent = (+value).toFixed((arr[1] > 0)?Math.min(6-(arr[0].length+1), arr[1].length):0);
         isEvaluated = false;
