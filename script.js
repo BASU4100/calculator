@@ -116,6 +116,7 @@ function evaluate() {
         }
         if (isFinite(value))
             value = Math.round(value * 10000) / 10000;
+        console.log(value);
         return (((value+"").length > 6)?expConversion(value, false):value);
     }
 }
@@ -132,7 +133,7 @@ function expConversion(val, reverse) {
 }
 
 function display() { 
-    if (isEvaluated && isFinite(value)) {
+    if (isEvaluated && value !== "IDK" && !(value+"").includes("e")) {
         let arr = (value+"").split(".");
         values.textContent = (+value).toFixed((arr[1] > 0)?Math.min(6-(arr[0].length+1), arr[1].length):0);
         isEvaluated = false;
