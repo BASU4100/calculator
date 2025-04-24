@@ -11,7 +11,7 @@ let firstOperand = "";
 let operator = "";
 
 operatorSide.addEventListener("click", (e) => {
-    if (value === "IDK") {
+    if (!isFinite(value)) {
         document.querySelector("#AC").click();
         return;
     }
@@ -51,7 +51,7 @@ function addRemoveStyle(elem, change) {
 
 operandSide.addEventListener("click", (e) => {
     let id = e.target.id;
-    if (value === "IDK")
+    if (!isFinite(value))
         id = "AC";
     if (id == "AC") {
         isOperatorSelected = false;
@@ -113,7 +113,8 @@ function evaluate() {
                         break;
             default : value = +firstOperand + +value;
         }
-        value = Math.round(value * 10000) / 10000;
+        if (isFinite(value))
+            value = Math.round(value * 10000) / 10000;
         return (((value+"").length > 6)?expConversion(value, false):value);
     }
 }
@@ -130,7 +131,7 @@ function expConversion(val, reverse) {
 }
 
 function display() { 
-    if (isEvaluated && value !== "IDK" && !(value+"").includes("e")) {
+    if (isEvaluated && isFinite(value)) {
         let arr = (value+"").split(".");
         values.textContent = (+value).toFixed((arr[1] > 0)?Math.min(6-(arr[0].length+1), arr[1].length):0);
         isEvaluated = false;
