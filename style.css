@@ -108,3 +108,11 @@ button {
 #k\+ {
     margin-bottom: var(--button-margin);
 }
+
+#del, #AC {
+    background: #d50000;
+}
+
+#k\= {
+    background: #d5d500;
+}
